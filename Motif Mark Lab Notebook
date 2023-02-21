@@ -1,0 +1,88 @@
+-------------------------------
+Lab Notebook for Motif Mark OOP
+-------------------------------
+Logan Wallace 
+-------------
+2/20/2023
+---------
+
+The purpose of this assignment is to write a python script using object oriented programing 
+to parse through a fasta file containing a gene sequence and identify motifs within for specific
+transcriptional regulators and represent them visually using an output generated with Pycairo
+
+# Goals
+Create a repository in your GitHub profile called motif-mark and write a python script using object-oriented code to visualize motifs on sequences. It is HIGHLY RECOMMENDED that you utilize frequent commits on this assignment so that you can revert if additions break your code.
+
+# Data
+This file contains data about motifs
+Fig_1_motifs.txt
+This file contains the gene sequence we are going to be searching
+Figure_1.fasta
+
+# Minimum requirements
+Well commented, Python3 compatible, object-oriented code, with CLEAR readme.md file
+Public GitHub repo named motif-mark [WARNING! Assignment will not be graded if repo incorrectly named!]
+Script named motif-mark-oop.py [WARNING! Assignment will not be graded if script incorrectly named!]
+Use argparse with options: [WARNING! Assignment will not be graded if argparse options not as requested!]
+-f: fasta file
+-m: motifs file
+Output file has same prefix as input file (e.g. Figure_1.fa -> Figure_1.png)
+Input FASTA file (seqs ≤1000 bases) and motifs file (≤10 bases each, one motif per line in a text file)
+Capable of handling:
+Motifs with ambiguous nucleotides (see https://en.wikipedia.org/wiki/Nucleic_acid_notationLinks to an external site.)
+Multiple sequences (max 10 in the data you will be provided)
+Multiple motifs (max 5 in the data you will be provided)
+Consider:
+How you will handle overlapping motifs
+How you will denote introns/exons
+All features (motifs, introns, exons) should be to scale
+Output single, well-labeled figure, per FASTA file
+png output
+Key/labeling
+Should be able to be run in the following environment:
+conda create -n my_pycairo pycairo
+conda activate my_pycairo
+[WARNING! Assignment will not be graded if other packages are required!]
+# Stretch goals
+Staggered drawing of motifs (along the y-axis) to better show position of overlapping motifs
+Transform information in FASTA header to more readable figure title
+You can find Leslie's pycairo example here: pycairo_ex.ipynbDownload pycairo_ex.ipynb
+
+To turn in, submit a link to your GitHub repo and a png of your final figure.
+
+# Starting the assignment
+- Created a github repo named 'motif-mark'
+- Started writing a python script titled 'motif-mark-oop.py'
+- Started this lab notebook
+- Pulled the github repo down to bioinfo/Bi625/motif-mark
+- Installed pycairo % pip install pycairo (pycairo was already installed with python3.10!)
+
+# OoCA Motif Mark
+This Out of Class Assignment is meant to get you thinking about the classes you might want to implement for OOP Motif Mark, as well as get you to play around with pycairo. Submit:
+
+A list of classes you might need for OOP Motif Mark (in English, not code)
+[OPTIONAL] How those classes might interact (in English, not code)
+Working code to generate a line and a rectangle, not at the origin, using pycairo (NOT a jupyter notebook)
+The image that your code created
+
+Classes I might want for motif-mark-oop.py
+    Class - "Gene"
+        Data to include;
+        Name: Gene Name
+        Sequence: Gene sequence
+        Location start and end: Location in genome or irrelevant if downstream we just get relative location for "Exon" and "Motif"
+    Class - "Exon"
+        Data to include;
+        Sequence: Exon nucleotide sequence 
+        Location start and end: given in bp or in relation to start
+    Class - "Intron"
+        Data to include;
+        Sequence: Intron sequence
+        Location Start and End: given in bp or relation to start
+    Class - "Motif"
+        Data to include;
+            Sequence: string, EX 'ACTY'
+            Location start and end: given in bp or relation to start 
+            Regulation: Up/Down/Ambiguous 
+
+Wrote a python script to make a rectangle and a line using pycairo - 'drawing.py'
