@@ -11,7 +11,7 @@ The corresponding png file will be written out as motif-marks.png
 To download this repository - 
 
 ```bash
-git clone https://github.com/Logan-Wallace/motif-mark
+git clone https://github.com/Logan-Wallace/motif-mark.git
 ```
 
 ## Usage
