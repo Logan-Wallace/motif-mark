@@ -1,0 +1,13 @@
+'''The purpose of this program is to generate a drawing of a sequence displaying a gene (line), an 
+exon (rectangle) and motifs (hash marks) along the gene by reading in a fasta file holding a gene 
+sequence and another text file containing motifs 
+Using Pycairo and object oriented programming'''
+
+
+# 1. Read in the fasta file. Use online fasta to turn the sequences from each gene into a single string
+# Following the ">" character, we take the characters until a " " as the gene name.
+# The characters after ":" need to be stored as the start and stop positions of the gene.
+# If (reverse complement) is passed following this, we need to use reverse
+# This should probably be a function of class 'gene'
+
+

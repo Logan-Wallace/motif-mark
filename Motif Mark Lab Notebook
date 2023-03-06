@@ -65,7 +65,6 @@ A list of classes you might need for OOP Motif Mark (in English, not code)
 Working code to generate a line and a rectangle, not at the origin, using pycairo (NOT a jupyter notebook)
 The image that your code created
 
-Classes I might want for motif-mark-oop.py
     Class - "Gene"
         Data to include;
         Name: Gene Name
@@ -86,3 +85,39 @@ Classes I might want for motif-mark-oop.py
             Regulation: Up/Down/Ambiguous 
 
 Wrote a python script to make a rectangle and a line using pycairo - 'drawing.py'
+
+2/21/23 - In class time working on motif-mark-oop.py
+
+2/27/23 - Study in KC basement
+
+2/28/23 - Open Lab Time
+
+To this point I have a program that will
+1. Look through a motifs.txt file and store the evident motifs as motif objects
+2. Read through a fasta file containing our genes and store them as gene objects
+
+Now I need to...
+1. Write a function for the gene class that will search itself for exons and pass them along to the exon class
+    What information are we going to need to do this? We need to search along the gene for capital letters, keeping track of where within the gene the exon is by location
+
+3/1/23
+
+#Finding the exon within the gene using regular expressions!
+pattern = re.compile("[A-Z]+")
+exon = pattern.search(sequence)
+startStop = exon.span()
+start = startStop[0]
+stop = startStop[1]
+exon_sequence = exon.group()
+print(start, stop, exon_sequence)
+
+What is a "Y" when considering gene sequence and how am I going to impute that as a pattern in a regex search?
+    A "Y" is encoding for any pyrimidine aka C or T bases. So when encoding this with regular expressions I am going to have to figure out how to encode that as a pattern. Perhaps I can use Y = re.compile("[C|T]")
+
+3/2/23
+
+Jupyter notebook about solving how to search for motifs in genes using regex - 'Regex practice for motif-mark.ipynb'
+
+3/6/23
+
+
