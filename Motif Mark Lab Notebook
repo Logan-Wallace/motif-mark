@@ -130,5 +130,13 @@ Scratch the above, I forgot to recognize that our genes are going to be scaled o
 
 ### Drawing the gene line
 
-The gene line is going to be centered at increments of 32 from the top or bottom because we are using a multiple of 64 to increment the height for each gene we have. So we will start a line at x0, y0 (0, (genenumber x 32)) and move to x1, y1 (exon start, genenumber x 32) and start again at exon end drawing to gene end. We probably just want to collect this vertical center at the beginning (y0) by taking genenumber by  
+The gene line is going to be centered at increments of 32 from the top or bottom because we are using a multiple of 64 to increment the height for each gene we have. So we will start a line at x0, y0 (0, (genenumber x 32)) and move to x1, y1 (exon start, genenumber x 32) and start again at exon end drawing to gene end. We probably just want to collect this vertical center at the beginning (y0) by taking genenumber by 
+
+To draw our exon,
+ctx.rectangle(0, 0, 1, 1)  # Rectangle(x0, y0, x1, y1)
+ctx.set_source(pat)
+ctx.fill()
+We might want to exclude the ctx.fill part however because we want to be able to show our motifs within the exons if they are occurring. 
+
+
 
