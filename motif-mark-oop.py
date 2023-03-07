@@ -8,6 +8,7 @@ sequence and another text file containing motifs using Pycairo and object orient
 import cairo 
 import re
 import argparse
+import math
 
 
 def oneline_fasta():
@@ -77,6 +78,8 @@ geneFile = args.fasta_file
 #Define some other variables
 motifList:list = []
 drawingList: list = []
+exonStart: int = 0
+exonStop: int = 0
 
 
 class Gene:
@@ -89,8 +92,11 @@ class Gene:
         self.start = start
         self.stop = stop
         self.chromosome = chromosome
-        self.motifDict = dict
-        self.exon = tuple()
+        self.motifDict = dict #motif:start1, start2, startn 
+        self.exon = tuple() #start, stop, sequence
+        self.exonStart = exonStart
+        self.exonStop = exonStop
+        
         
         ###Methods
     def findExons(self):
@@ -101,8 +107,8 @@ class Gene:
         Exon = pattern.search(self.sequence)
         #Span gives us the span over which the pattern match was found
         startStop = Exon.span()
-        start = startStop[0]
-        stop = startStop[1]
+        exonStart = startStop[0]
+        exonStop = startStop[1]
         #Group() gives us the pattern match as a string from the match object
         exon_sequence = Exon.group()
         #Store the results as 'exon' (tuple) within the gene object
@@ -128,9 +134,6 @@ class Gene:
             for matchObject in found:
                 startStop = matchObject.span()
                 motifDict[motif].append(startStop[0])
-            print(motifDict)
-
-    def createDrawing(self):
 
 
 class Motifs:
@@ -155,6 +158,54 @@ class Motifs:
                     motif = motif.upper()
                     #Store the motif as an object of class motif
                     motifList.append(motif)
+
+
+class Drawing:
+    def __init__(self, geneList):
+        '''The Drawing class will create a drawing using pycairo and information from all the listed gene objects'''
+
+    ###Methods
+    def Draw(self):
+        '''This method will draw our genes to a png'''
+        #Set up our canvas
+        numGenes = len(geneList)
+        WIDTH = 256
+        HEIGHT = numGenes * 64
+        surface = cairo.PDFSurface("MarkedMotif.pdf",WIDTH, HEIGHT)
+        ctx = cairo.Context(surface)
+
+        # pat = cairo.LinearGradient(0.0, 0.0, 0.0, 1.0)
+        # pat.add_color_stop_rgba(1, 0.7, 0, 0, 0.5)  # First stop, 50% opacity
+        # pat.add_color_stop_rgba(0, 0.9, 0.7, 0.2, 1)  # Last stop, 100% opacity
+
+        #Initialize a counter
+        geneNum = 0
+        #for gene in geneList:
+        #Draw the line for our gene from start to exon beginning
+        geneNum += 1
+        geneLength = gene.stop - gene.start
+        yCenter = geneNum*32
+        exonYMax = yCenter + 8
+        exonYMin = yCenter - 8
+        ctx.move_to(0, yCenter)
+        ctx.line_to(0, gene.exonStart) ###might have to extract this into a new data item in gene class if not subscriptable but unsure
+        ctx.set_line_width(6)
+        ctx.stroke()
+        #Draw the line from exon stop to gene end
+        ctx.move_to(gene.exonStop, yCenter)
+        ctx.line_to(0, geneLength)
+        #Draw our rectangle for our exon
+        ctx.rectangle(gene.exonStart, exonYMin, gene.exonStop, exonYMax) # Rectangle(x0, y0, x1, y1)
+        #ctx.set_source(pat)
+        #ctx.fill()
+        surface.finish()
+
+
+
+
+
+
+
 
 #Create a motif object and use findMotifs() to store the results as a list
 motifs = Motifs()
@@ -219,8 +270,9 @@ for gene in geneList:
     gene.findMotifs(motifs.motifList)
 
 #Now that we have our motifs stored within each of our genes, it's time to create a drawing object
-for gene in geneList:
-    gene.createDrawing()
+prettyPicture = Drawing(geneList)
+prettyPicture.Draw()
+    
 
 
 

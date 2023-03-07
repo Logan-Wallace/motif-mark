@@ -118,6 +118,17 @@ What is a "Y" when considering gene sequence and how am I going to impute that a
 
 Jupyter notebook about solving how to search for motifs in genes using regex - 'Regex practice for motif-mark.ipynb'
 
-3/6/23
+3/6/23 - Drawing the gene 
 
+To this point, we've read in our files, collected our genes and motifs and looked within the genes for motifs and exons. Now we need to draw our genes in one single .png file using pycairo.
+
+Tutorial can be found here - https://pycairo.readthedocs.io/en/latest/tutorial/introduction.html
+
+We are going to start by creating a canvas, the default was 256x256. Using '''$cat online.fasta | head -n 2 | tail -n 1 | wc''' we can see that our gene is 549 nucleotides long. We want to leave room on either end and also make sure that we have room 
+
+Scratch the above, I forgot to recognize that our genes are going to be scaled onto our canvas so this isn't critical. We will use 256 Width x Height (64 x # of genes) and center our genes at increments of 32 on the canvas.
+
+### Drawing the gene line
+
+The gene line is going to be centered at increments of 32 from the top or bottom because we are using a multiple of 64 to increment the height for each gene we have. So we will start a line at x0, y0 (0, (genenumber x 32)) and move to x1, y1 (exon start, genenumber x 32) and start again at exon end drawing to gene end. We probably just want to collect this vertical center at the beginning (y0) by taking genenumber by  
 

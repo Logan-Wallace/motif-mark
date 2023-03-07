@@ -8,7 +8,7 @@ import cairo
 width = 1000 
 height = 2000
 
-#create the coordinates to display your graphic, desginate output
+#create the coordinates to display your graphic, designate output
 surface = cairo.PDFSurface("Pycairo.pdf",width, height)
 #create the coordinates you will be drawing on
 context = cairo.Context(surface)
