@@ -194,6 +194,8 @@ class Drawing:
         #Draw the line from exon stop to gene end
         ctx.move_to(gene.exonStop, yCenter)
         ctx.line_to(0, geneLength)
+        ctx.set_line_width(6)
+        ctx.stroke()
         #Draw our rectangle for our exon
         ctx.rectangle(gene.exonStart, exonYMin, gene.exonStop, exonYMax) # Rectangle(x0, y0, x1, y1)
         #ctx.set_source(pat)
