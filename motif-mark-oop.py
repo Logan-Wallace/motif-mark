@@ -171,12 +171,10 @@ class Drawing:
         numGenes = len(geneList)
         WIDTH = 256
         HEIGHT = numGenes * 64
-        surface = cairo.PDFSurface("MarkedMotif.pdf",WIDTH, HEIGHT)
+        #Create a surface, 'FORMAT_ARGB32' allows for transparency
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
+        #Create a context
         ctx = cairo.Context(surface)
-
-        # pat = cairo.LinearGradient(0.0, 0.0, 0.0, 1.0)
-        # pat.add_color_stop_rgba(1, 0.7, 0, 0, 0.5)  # First stop, 50% opacity
-        # pat.add_color_stop_rgba(0, 0.9, 0.7, 0.2, 1)  # Last stop, 100% opacity
 
         #Initialize a counter
         geneNum = 0
@@ -187,6 +185,7 @@ class Drawing:
         yCenter = geneNum*32
         exonYMax = yCenter + 8
         exonYMin = yCenter - 8
+        ctx.set_source_rgb(1,1,1)
         ctx.move_to(0, yCenter)
         ctx.line_to(0, gene.exonStart) ###might have to extract this into a new data item in gene class if not subscriptable but unsure
         ctx.set_line_width(6)
@@ -198,8 +197,7 @@ class Drawing:
         ctx.stroke()
         #Draw our rectangle for our exon
         ctx.rectangle(gene.exonStart, exonYMin, gene.exonStop, exonYMax) # Rectangle(x0, y0, x1, y1)
-        #ctx.set_source(pat)
-        #ctx.fill()
+        ctx.stroke()
         surface.finish()
 
 
