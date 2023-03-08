@@ -21,7 +21,7 @@ git clone https://github.com/Logan-Wallace/motif-mark.git
 -m The name of the text file containing the motifs we are searching the genes for.
 
 ```bash
-python motif-mark-oop.y -f "genes.fa" -m "motifs.txt"
+python motif-mark-oop.py -f "genes.fa" -m "motifs.txt"
 ```
 
 ## Contributing
