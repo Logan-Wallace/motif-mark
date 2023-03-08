@@ -138,5 +138,31 @@ ctx.set_source(pat)
 ctx.fill()
 We might want to exclude the ctx.fill part however because we want to be able to show our motifs within the exons if they are occurring. 
 
+We need to additionally add a label for each gene
 
 
+
+### Creating a title in pycairo
+
+Example from James C. - 
+
+(presumably 'import cairo as c')
+
+#Title 
+    titlesrc = c.LinearGradient(0, 10, 0, 40)
+    titlesrc.set_extend(c.EXTEND_REPEAT)
+    titlesrc.add_color_stop_rgb(0.0, 0.8, 0.8, 1)
+    titlesrc.add_color_stop_rgb(0.5, 1, 0.8, 1) 
+    ctx.select_font_face("Arial", c.FONT_WEIGHT_BOLD)
+    ctx.set_font_size(60)
+    ctx.move_to((w/2)-150, 70)
+    ctx.text_path("MOTIF MARKER")
+    ctx.set_source(titlesrc)
+    ctx.fill()
+
+Here is another example - https://zetcode.com/gfx/pycairo/text/
+
+### Creating a legend
+
+Information contained within the legend
+1. 

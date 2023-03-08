@@ -9,6 +9,7 @@ import cairo
 import re
 import argparse
 import math
+import random
 
 
 def oneline_fasta():
@@ -129,7 +130,9 @@ class Gene:
                     letter = "[" + letter + "]"
                 motifString += letter
             query = re.compile("{}".format(motifString))
-            found = query.finditer(self.sequence)
+            upperSequence = self.sequence
+            upperSequence = upperSequence.upper()
+            found = query.finditer(upperSequence)
             #found is an iterator of match objects so we need to iterate through them and we could save them to a dictionary
             for matchObject in found:
                 startStop = matchObject.span()
@@ -167,25 +170,23 @@ class Drawing:
     ###Methods
     def Draw(self):
         '''This method will draw our genes to a png'''
+        #Initialize a dictionary to get some color for the motifs
+        motifColor: dict = {}
         #Set up our canvas
         numGenes = len(geneList)
-        WIDTH = 1000
+        WIDTH = 850
         HEIGHT = numGenes * 640
         #Create a surface, 'FORMAT_ARGB32' allows for transparency
         surface = cairo.ImageSurface(cairo.FORMAT_RGB24, WIDTH, HEIGHT)
         #Create a context
-        ctx = cairo.Context(surface)
-        #Make a title
-        #titlesrc = c.LinearGradient(0, 10, 0, 40)
-        #titlesrc.set_extend(c.EXTEND_REPEAT)
-        #titlesrc.add_color_stop_rgb(0.0, 0.8, 0.8, 1)
-        #titlesrc.add_color_stop_rgb(0.5, 1, 0.8, 1) 
-        ctx.select_font_face("Times", cairo.FONT_WEIGHT_BOLD)
+        ctx = cairo.Context(surface) 
+        ctx.set_source_rgb(.5, .9, .5)
+        ctx.select_font_face("Purisa", cairo.FONT_WEIGHT_BOLD, cairo.FONT_SLANT_ITALIC)
         ctx.set_font_size(60)
-        ctx.move_to((WIDTH/2)-150, 70)
-        ctx.text_path("MOTIF MARKER")
-        #ctx.set_source(titlesrc)
-        ctx.fill()
+        ctx.move_to((WIDTH/4), (100))
+        ctx.show_text("MOTIF MARK")
+        #Make a legend
+
         #Initialize a counter
         geneNum = 0
         #Draw our genes 
@@ -206,21 +207,53 @@ class Drawing:
             ctx.line_to(geneLength, yCenter)
             ctx.set_line_width(5)
             ctx.stroke()
+            #Add a label to each of our genes
+            ctx.set_source_rgb(.9, .5, .5)
+            ctx.select_font_face("Purisa")
+            cairo.FONT_SLANT_ITALIC
+            cairo.FONT_WEIGHT_NORMAL
+            ctx.set_font_size(18)
+            ctx.move_to(0, (yCenter - 50))
+            ctx.show_text(gene.name)
             #Make some motif hashes
             motifDict = gene.motifDict
+            motifCount = 0 
             for motif in motifDict:
-                print(motif) #get the name of the motif
+                #If we don't already have a color for that motif
+                if motif not in motifColor:
+                    #Generate a seed to create a color
+                    seed = random.random()
+                    motifColor[motif] = seed
+                    #Add the motif to the legend
+                    random.seed(seed)
+                    r = random.random()
+                    g = random.random()
+                    b = random.random()
+                    ctx.set_source_rgb(r, g, b)
+                    ctx.select_font_face("Purisa")
+                    cairo.FONT_SLANT_ITALIC
+                    cairo.FONT_WEIGHT_NORMAL
+                    ctx.set_font_size(18)
+                    ctx.move_to(((motifCount*150)+100), (2400))
+                    ctx.show_text(str(motif))
+                    motifCount += 1
+                elif motif in motifColor:
+                    seed = motifColor[motif]
+                motifName = str(motif) #get the name of the motif
                 motifLength = len(str(motif))
                 print(motifLength) #get the length of the motif
                 #Access the list within the dictionary to see the start of the motif within the gene
                 for i in gene.motifDict[motif]:
                     print(i)
                     motifStart = i 
+                    random.seed(seed)
+                    r = random.random()
+                    g = random.random()
+                    b = random.random()
                     ctx.rectangle(motifStart, (yCenter - 40), motifLength, 80)
-                    #this is where i need to change the colors for my motifs with something like an if statement, on second thought, I should probably determine that earlier given I want to make a legend and else
-                    ctx.set_source_rgb(1, 0, 0)
+                    ctx.set_source_rgb(r, g, b)
                     ctx.set_line_width(1)
-                    ctx.fill()
+                    ctx.fill()            
             surface.write_to_png("MarkedMotif.png")
                 
 
