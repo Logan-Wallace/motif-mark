@@ -178,27 +178,27 @@ class Drawing:
 
         #Initialize a counter
         geneNum = 0
-        #for gene in geneList:
-        #Draw the line for our gene from start to exon beginning
-        geneNum += 1
-        geneLength = gene.stop - gene.start
-        yCenter = geneNum*32
-        exonYMax = yCenter + 8
-        exonYMin = yCenter - 8
-        ctx.set_source_rgb(1,1,1)
-        ctx.move_to(0, yCenter)
-        ctx.line_to(0, gene.exonStart) ###might have to extract this into a new data item in gene class if not subscriptable but unsure
-        ctx.set_line_width(6)
-        ctx.stroke()
-        #Draw the line from exon stop to gene end
-        ctx.move_to(gene.exonStop, yCenter)
-        ctx.line_to(0, geneLength)
-        ctx.set_line_width(6)
-        ctx.stroke()
-        #Draw our rectangle for our exon
-        ctx.rectangle(gene.exonStart, exonYMin, gene.exonStop, exonYMax) # Rectangle(x0, y0, x1, y1)
-        ctx.stroke()
-        surface.write_to_png("MarkedMotif.png")
+        for gene in geneList:
+            #Draw the line for our gene from start to exon beginning
+            geneNum += 1
+            geneLength = gene.stop - gene.start
+            yCenter = geneNum*32
+            exonYMax = yCenter + 8
+            exonYMin = yCenter - 8
+            ctx.set_source_rgb(1,1,1)
+            ctx.move_to(0, yCenter)
+            ctx.line_to(0, gene.exonStart) ###might have to extract this into a new data item in gene class if not subscriptable but unsure
+            ctx.set_line_width(6)
+            ctx.stroke()
+            #Draw the line from exon stop to gene end
+            ctx.move_to(gene.exonStop, yCenter)
+            ctx.line_to(0, geneLength)
+            ctx.set_line_width(6)
+            ctx.stroke()
+            #Draw our rectangle for our exon
+            ctx.rectangle(gene.exonStart, exonYMin, gene.exonStop, exonYMax) # Rectangle(x0, y0, x1, y1)
+            ctx.stroke()
+            surface.write_to_png("MarkedMotif.png")
 
 
 
