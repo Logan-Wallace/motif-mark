@@ -107,8 +107,8 @@ class Gene:
         Exon = pattern.search(self.sequence)
         #Span gives us the span over which the pattern match was found
         startStop = Exon.span()
-        exonStart = startStop[0]
-        exonStop = startStop[1]
+        self.exonStart = startStop[0]
+        self.exonStop = startStop[1]
         #Group() gives us the pattern match as a string from the match object
         exon_sequence = Exon.group()
         #Store the results as 'exon' (tuple) within the gene object
@@ -134,7 +134,7 @@ class Gene:
             for matchObject in found:
                 startStop = matchObject.span()
                 motifDict[motif].append(startStop[0])
-
+        self.motifDict = motifDict
 
 class Motifs:
     def __init__(self):
@@ -169,37 +169,60 @@ class Drawing:
         '''This method will draw our genes to a png'''
         #Set up our canvas
         numGenes = len(geneList)
-        WIDTH = 256
-        HEIGHT = numGenes * 64
+        WIDTH = 1000
+        HEIGHT = numGenes * 640
         #Create a surface, 'FORMAT_ARGB32' allows for transparency
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
+        surface = cairo.ImageSurface(cairo.FORMAT_RGB24, WIDTH, HEIGHT)
         #Create a context
         ctx = cairo.Context(surface)
-
+        #Make a title
+        #titlesrc = c.LinearGradient(0, 10, 0, 40)
+        #titlesrc.set_extend(c.EXTEND_REPEAT)
+        #titlesrc.add_color_stop_rgb(0.0, 0.8, 0.8, 1)
+        #titlesrc.add_color_stop_rgb(0.5, 1, 0.8, 1) 
+        ctx.select_font_face("Times", cairo.FONT_WEIGHT_BOLD)
+        ctx.set_font_size(60)
+        ctx.move_to((WIDTH/2)-150, 70)
+        ctx.text_path("MOTIF MARKER")
+        #ctx.set_source(titlesrc)
+        ctx.fill()
         #Initialize a counter
         geneNum = 0
+        #Draw our genes 
         for gene in geneList:
+            ctx.set_source_rgb(1,1,1)
             #Draw the line for our gene from start to exon beginning
             geneNum += 1
             geneLength = gene.stop - gene.start
-            yCenter = geneNum*32
-            exonYMax = yCenter + 8
-            exonYMin = yCenter - 8
-            ctx.set_source_rgb(1,1,1)
+            yCenter = geneNum*320
+            exonYMax = yCenter + 80
+            exonYMin = yCenter - 80
             ctx.move_to(0, yCenter)
-            ctx.line_to(0, gene.exonStart) ###might have to extract this into a new data item in gene class if not subscriptable but unsure
-            ctx.set_line_width(6)
-            ctx.stroke()
+            ctx.line_to(gene.exonStart, yCenter) ###might have to extract this into a new data item in gene class if not subscriptable but unsure
+            #Draw our rectangle for our exon
+            ctx.rectangle(gene.exonStart, exonYMin, (gene.exonStop - gene.exonStart), 160) # Rectangle(x0, y0, x1, y1) NOPE -> Rectangle (x0, y (bottom), width, height)
             #Draw the line from exon stop to gene end
             ctx.move_to(gene.exonStop, yCenter)
-            ctx.line_to(0, geneLength)
-            ctx.set_line_width(6)
+            ctx.line_to(geneLength, yCenter)
+            ctx.set_line_width(5)
             ctx.stroke()
-            #Draw our rectangle for our exon
-            ctx.rectangle(gene.exonStart, exonYMin, gene.exonStop, exonYMax) # Rectangle(x0, y0, x1, y1)
-            ctx.stroke()
+            #Make some motif hashes
+            motifDict = gene.motifDict
+            for motif in motifDict:
+                print(motif) #get the name of the motif
+                motifLength = len(str(motif))
+                print(motifLength) #get the length of the motif
+                #Access the list within the dictionary to see the start of the motif within the gene
+                for i in gene.motifDict[motif]:
+                    print(i)
+                    motifStart = i 
+                    ctx.rectangle(motifStart, (yCenter - 40), motifLength, 80)
+                    #this is where i need to change the colors for my motifs with something like an if statement, on second thought, I should probably determine that earlier given I want to make a legend and else
+                    ctx.set_source_rgb(1, 0, 0)
+                    ctx.set_line_width(1)
+                    ctx.fill()
             surface.write_to_png("MarkedMotif.png")
-
+                
 
 
 
@@ -236,21 +259,21 @@ with open("oneline.fasta", 'r') as geneFile:
             startStop = startStop.split("-")
             start = int(startStop[0])
             stop = int(startStop[1])
-            # #If the 'reverse_complement' flag is evident, we need to remember to reverse the sequence of this gene
-            # if line[2] == "(reverse":
-            #     reverseComp = True
+            #If the 'reverse_complement' flag is evident, we need to remember to reverse the sequence of this gene
+            if line[2] == "(reverse":
+                reverseComp = True
             counter += 1 
         #If the line is a sequence line
         elif line[0] == "a" or "c" or "t" or "g":
             sequence = line
-            # #first check the 'reverseComp' flag
-            # if reverseComp == True:
-            #     ###TEST
-            #     print("Gene sequence is a reverse complement")
-            #     #get the reverse complement
-            #     sequence = reverse_complement(sequence)
-            #     #reset the reverseComp flag
-            #     reverseComp = False            
+            #first check the 'reverseComp' flag
+            if reverseComp == True:
+                ###TEST
+                #print("Gene sequence is a reverse complement")
+                #get the reverse complement
+                sequence = reverse_complement(sequence)
+                #reset the reverseComp flag
+                reverseComp = False            
             # ###TEST
             # print("sequence: ", sequence)
             counter += 1
