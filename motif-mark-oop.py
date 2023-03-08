@@ -1,4 +1,5 @@
 #! usr/bin/env python
+# Author: Logan Wallace lwallac2@uoregon.edu
 
 '''The purpose of this program is to generate a drawing of a sequence displaying a gene (line), an 
 exon (rectangle) and motifs (hash marks) along the gene by reading in a fasta file holding a gene 
@@ -175,17 +176,16 @@ class Drawing:
         #Set up our canvas
         numGenes = len(geneList)
         WIDTH = 850
-        HEIGHT = numGenes * 640
+        HEIGHT = numGenes * 400
         #Create a surface, 'FORMAT_ARGB32' allows for transparency
         surface = cairo.ImageSurface(cairo.FORMAT_RGB24, WIDTH, HEIGHT)
         #Create a context
         ctx = cairo.Context(surface) 
-        ctx.set_source_rgb(.5, .9, .5)
+        ctx.set_source_rgb(1, 1, 1)
         ctx.select_font_face("Purisa", cairo.FONT_WEIGHT_BOLD, cairo.FONT_SLANT_ITALIC)
         ctx.set_font_size(60)
         ctx.move_to((WIDTH/4), (100))
         ctx.show_text("MOTIF MARK")
-        #Make a legend
 
         #Initialize a counter
         geneNum = 0
@@ -199,7 +199,7 @@ class Drawing:
             exonYMax = yCenter + 80
             exonYMin = yCenter - 80
             ctx.move_to(0, yCenter)
-            ctx.line_to(gene.exonStart, yCenter) ###might have to extract this into a new data item in gene class if not subscriptable but unsure
+            ctx.line_to(gene.exonStart, yCenter) 
             #Draw our rectangle for our exon
             ctx.rectangle(gene.exonStart, exonYMin, (gene.exonStop - gene.exonStart), 160) # Rectangle(x0, y0, x1, y1) NOPE -> Rectangle (x0, y (bottom), width, height)
             #Draw the line from exon stop to gene end
@@ -208,7 +208,7 @@ class Drawing:
             ctx.set_line_width(5)
             ctx.stroke()
             #Add a label to each of our genes
-            ctx.set_source_rgb(.9, .5, .5)
+            ctx.set_source_rgb(1, 1, 1)
             ctx.select_font_face("Purisa")
             cairo.FONT_SLANT_ITALIC
             cairo.FONT_WEIGHT_NORMAL
@@ -233,18 +233,16 @@ class Drawing:
                     ctx.select_font_face("Purisa")
                     cairo.FONT_SLANT_ITALIC
                     cairo.FONT_WEIGHT_NORMAL
-                    ctx.set_font_size(18)
-                    ctx.move_to(((motifCount*150)+100), (2400))
+                    ctx.set_font_size(24)
+                    ctx.move_to(((motifCount*150)), (HEIGHT - 100))
                     ctx.show_text(str(motif))
                     motifCount += 1
                 elif motif in motifColor:
                     seed = motifColor[motif]
                 motifName = str(motif) #get the name of the motif
                 motifLength = len(str(motif))
-                print(motifLength) #get the length of the motif
                 #Access the list within the dictionary to see the start of the motif within the gene
                 for i in gene.motifDict[motif]:
-                    print(i)
                     motifStart = i 
                     random.seed(seed)
                     r = random.random()
@@ -255,13 +253,6 @@ class Drawing:
                     ctx.set_line_width(1)
                     ctx.fill()            
             surface.write_to_png("MarkedMotif.png")
-                
-
-
-
-
-
-
 
 #Create a motif object and use findMotifs() to store the results as a list
 motifs = Motifs()
@@ -293,22 +284,18 @@ with open("oneline.fasta", 'r') as geneFile:
             start = int(startStop[0])
             stop = int(startStop[1])
             #If the 'reverse_complement' flag is evident, we need to remember to reverse the sequence of this gene
-            if line[2] == "(reverse":
-                reverseComp = True
+            #if line[2] == "(reverse":
+            #    reverseComp = True
             counter += 1 
         #If the line is a sequence line
         elif line[0] == "a" or "c" or "t" or "g":
             sequence = line
             #first check the 'reverseComp' flag
-            if reverseComp == True:
-                ###TEST
-                #print("Gene sequence is a reverse complement")
-                #get the reverse complement
-                sequence = reverse_complement(sequence)
-                #reset the reverseComp flag
-                reverseComp = False            
-            # ###TEST
-            # print("sequence: ", sequence)
+            # if reverseComp == True:
+            #     #get the reverse complement
+            #     sequence = reverse_complement(sequence)
+            #     #reset the reverseComp flag
+            #     reverseComp = False            
             counter += 1
         #If we have a header and a sequence
         if counter % 2 == 0:
