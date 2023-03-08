@@ -198,7 +198,7 @@ class Drawing:
         #Draw our rectangle for our exon
         ctx.rectangle(gene.exonStart, exonYMin, gene.exonStop, exonYMax) # Rectangle(x0, y0, x1, y1)
         ctx.stroke()
-        surface.finish()
+        surface.write_to_png("MarkedMotif.png")
 
 
 
